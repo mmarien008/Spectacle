@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spectacle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <!-- Hero -->
+  <header class="relative bg-cover bg-center h-screen" style="background-image: url('img/WhatsApp Image 2025-07-03 à 19.14.10_4244ba3e.jpg');">
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+      <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Vivez une soirée inoubliable</h1>
+      <p class="text-lg md:text-2xl text-white mb-6">Le grand spectacle de l’année arrive à Kinshasa !</p>
+      <a href="#billets" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-semibold transition">Acheter un billet</a>
+    </div>
+  </header>
+
+  <!-- Présentation -->
+  <section class="py-16 px-6 max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-8">À propos du spectacle</h2>
+    <p class="text-center text-lg leading-relaxed text-gray-700">Plongez dans une expérience  unique avec l'artiste Bob Kayemba, des performances époustouflantes et une ambiance électrique !
+        Pour ses 5 ans de Carrière. Alors bob
+    </p>
+  </section>
+
+  <!-- Infos Pratiques -->
+  <section class="bg-white py-12 px-6">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div>
+        <div class="flex justify-center mb-2">
+          <i data-lucide="map-pin" class="w-10 h-10 text-red-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-1">Lieu</h3>
+        <p>Humeuble exelencia, Kinshasa</p>
+      </div>
+      <div>
+        <div class="flex justify-center mb-2">
+          <i data-lucide="calendar-days" class="w-10 h-10 text-red-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-1">Date</h3>
+        <p>Dimanche 31 OUTS 2025</p>
+      </div>
+      <div>
+        <div class="flex justify-center mb-2">
+          <i data-lucide="clock" class="w-10 h-10 text-red-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-1">Heure</h3>
+        <p>À partir de 1600h</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Billetterie -->
+  <section id="billets" class="py-16 bg-gray-100 px-6">
+    <h2 class="text-3xl font-bold text-center mb-10">Réservez votre place maintenant</h2>
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Carte 1 -->
+      <div class="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center transform hover:scale-105 transition">
+        <i data-lucide="ticket" class="w-12 h-12 text-red-600 mb-4"></i>
+        <h3 class="text-2xl font-semibold mb-2">Place Standard</h3>
+        <p class="text-3xl font-bold text-red-600 mb-4">5 000 FC</p>
+        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="standard">
+          Acheter un billet
+        </button>
+      </div>
+      <!-- Carte 2 -->
+      <div class="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center transform hover:scale-105 transition">
+        <i data-lucide="ticket" class="w-12 h-12 text-red-600 mb-4"></i>
+        <h3 class="text-2xl font-semibold mb-2">Place VIP</h3>
+        <p class="text-3xl font-bold text-red-600 mb-4">10$</p>
+        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="vip">
+          Acheter un billet
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal d'achat -->
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-60 z-50">
+    <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-md mx-auto p-6 relative">
+      <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl leading-none">
+        &times;
+      </button>
+      <h2 class="text-2xl font-bold mb-4 text-center">Finalisez votre achat</h2>
+      <form id="paymentForm" class="space-y-4">
+        <div>
+          <label for="fullname" class="block text-sm font-medium text-gray-700">Nom complet</label>
+          <input type="text" id="fullname" name="fullname" required
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500" />
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email ou téléphone</label>
+          <input type="text" id="email" name="email" required
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500" />
+        </div>
+        <div>
+          <label for="quantity" class="block text-sm font-medium text-gray-700">Nombre de tickets</label>
+          <input type="number" id="quantity" name="quantity" min="1" value="1" required
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500" />
+        </div>
+        <div>
+          <label for="ticketType" class="block text-sm font-medium text-gray-700">Type de billet</label>
+          <select id="ticketType" name="ticketType" required
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+            <option value="standard">Standard – 5000 FC</option>
+            <option value="vip">VIP – 10 $</option>
+          </select>
+        </div>
+        <button type="submit"
+                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-full">
+          Procéder au paiement
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-8 mt-12">
+    <div class="max-w-5xl mx-auto text-center">
+      <p class="mb-4">© 2025 MenjiDrc. Tous droits réservés.</p>
+      <div class="flex justify-center space-x-6">
+        <a href="#" class="hover:text-gray-400"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+        <a href="#" class="hover:text-gray-400"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+        <a href="#" class="hover:text-gray-400"><i data-lucide="mail" class="w-6 h-6"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const modal = document.getElementById('modal');
+    const closeBtn = document.getElementById('closeModal');
+    const openBtns = document.querySelectorAll('.open-modal');
+    const ticketTypeSelect = document.getElementById('ticketType');
+
+    openBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Ouvre modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Sélectionne le type de billet dans le formulaire selon le bouton cliqué
+        const ticket = btn.getAttribute('data-ticket');
+        ticketTypeSelect.value = ticket;
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+
+    modal.addEventListener('click', e => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const data = {
+        fullname: this.fullname.value,
+        email: this.email.value,
+        quantity: this.quantity.value,
+        ticketType: this.ticketType.value
+      };
+      console.log('Données :', data);
+      alert(`Paiement effectué pour ${data.quantity} billet(s) ${data.ticketType.toUpperCase()} ! Merci.`);
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      this.reset();
+    });
+  </script>
+</body>
+</html>
