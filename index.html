@@ -6,6 +6,7 @@
   <title>Spectacle</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans">
 
@@ -22,8 +23,9 @@
   <!-- Présentation -->
   <section class="py-16 px-6 max-w-5xl mx-auto">
     <h2 class="text-3xl font-bold text-center mb-8">À propos du spectacle</h2>
-    <p class="text-center text-lg leading-relaxed text-gray-700">Plongez dans une expérience  unique avec l'artiste Bob Kayemba, des performances époustouflantes et une ambiance électrique !
-        Pour ses 5 ans de Carrière. Alors bob
+    <p class="text-center text-lg leading-relaxed text-gray-700">
+      Plongez dans une expérience unique avec l'artiste Bob Kayemba, des performances époustouflantes et une ambiance électrique !
+      Pour ses 5 ans de Carrière. Alors bob
     </p>
   </section>
 
@@ -49,7 +51,7 @@
           <i data-lucide="clock" class="w-10 h-10 text-red-600"></i>
         </div>
         <h3 class="text-xl font-semibold mb-1">Heure</h3>
-        <p>À partir de 1600h</p>
+        <p>À partir de 16h00</p>
       </div>
     </div>
   </section>
@@ -106,8 +108,8 @@
           <label for="ticketType" class="block text-sm font-medium text-gray-700">Type de billet</label>
           <select id="ticketType" name="ticketType" required
                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-            <option value="standard">Standard – 5000 FC</option>
-            <option value="vip">VIP – 10 $</option>
+            <option value="0">Standard – 5000 FC</option>
+            <option value="1">VIP – 10 $</option>
           </select>
         </div>
         <button type="submit"
@@ -116,6 +118,24 @@
         </button>
       </form>
     </div>
+  </div>
+
+  <!-- Modal QR Code -->
+<div id="qrModal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-60 z-50">
+  <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-md mx-auto p-6 relative text-center">
+    <button id="closeQrModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl leading-none">
+      &times;
+    </button>
+    <h2 class="text-xl font-bold mb-4">Votre billet est prêt</h2>
+    <canvas id="qrcodeCanvas" class="mx-auto"></canvas>
+    <a id="downloadLink" href="#" download="ticket-qr.png" class="text-blue-600 underline mt-4 block">Télécharger le QR Code</a>
+  </div>
+</div>
+
+  <!-- QRCode Affichage + Lien -->
+  <div id="qrcodeContainer" class="hidden flex-col items-center mt-8 mb-10 text-center">
+    <canvas id="qrcodeCanvas"></canvas>
+    <a id="downloadLink" href="#" download="ticket-qr.png" class="text-blue-600 underline mt-2">Télécharger le QR Code</a>
   </div>
 
   <!-- Footer -->
@@ -130,21 +150,21 @@
     </div>
   </footer>
 
+  <!-- JS Scripts -->
   <script>
     lucide.createIcons();
 
     const modal = document.getElementById('modal');
+    const qrModal = document.getElementById('qrModal');
     const closeBtn = document.getElementById('closeModal');
+    const closeQrBtn = document.getElementById('closeQrModal');
     const openBtns = document.querySelectorAll('.open-modal');
     const ticketTypeSelect = document.getElementById('ticketType');
 
     openBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Ouvre modal
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-
-        // Sélectionne le type de billet dans le formulaire selon le bouton cliqué
         const ticket = btn.getAttribute('data-ticket');
         ticketTypeSelect.value = ticket;
       });
@@ -162,19 +182,90 @@
       }
     });
 
-    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    closeQrBtn.addEventListener('click', () => {
+      qrModal.classList.add('hidden');
+      qrModal.classList.remove('flex');
+    });
+
+    qrModal.addEventListener('click', e => {
+      if (e.target === qrModal) {
+        qrModal.classList.add('hidden');
+        qrModal.classList.remove('flex');
+      }
+    });
+
+    // Fonction pour générer un code unique basé sur les secondes depuis 1978
+    function generateUniqueCodeFrom1978() {
+      const now = Math.floor(Date.now() / 1000); // secondes depuis 1970
+      const start1978 = Math.floor(new Date('1978-01-01T00:00:00Z').getTime() / 1000);
+      const secondsSince1978 = now - start1978;
+      return 'TK-' + secondsSince1978;
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const data = {
-        fullname: this.fullname.value,
-        email: this.email.value,
-        quantity: this.quantity.value,
-        ticketType: this.ticketType.value
+        nom: this.fullname.value,
+        conctat: this.email.value,
+        n_billet: this.quantity.value,
+        vip: this.ticketType.value
       };
-      console.log('Données :', data);
-      alert(`Paiement effectué pour ${data.quantity} billet(s) ${data.ticketType.toUpperCase()} ! Merci.`);
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      this.reset();
+
+   
+
+      try {
+        // Envoi des données à l'API
+        const response = await fetch('https://gestionticket.menjidrc.com/api/tickets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur serveur : ' + response.status);
+        }
+
+        const result = await response.json();
+
+        console.log(result);
+
+        // Si l'API ne renvoie pas de code unique, on en génère un côté client
+        const uniqueCode = result["code"] || generateUniqueCodeFrom1978();
+
+        const qrText = `🎫 Billet Électronique 🎫\nCode: ${uniqueCode}`;
+
+        const canvas = document.getElementById('qrcodeCanvas');
+        const link = document.getElementById('downloadLink');
+
+        // Génération du QR Code
+        QRCode.toCanvas(canvas, qrText, {
+          width: 200,
+          color: {
+            dark: "#000000",
+            light: "#ffffff"
+          }
+        }, function (error) {
+          if (error) return console.error(error);
+          const dataURL = canvas.toDataURL("image/png");
+          link.href = dataURL;
+
+          // Afficher la modal QR
+          qrModal.classList.remove("hidden");
+          qrModal.classList.add("flex");
+        });
+
+        alert(` Paiement effectué pour !`);
+
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        this.reset();
+
+      } catch (error) {
+        alert("Une erreur est survenue : " + error.message);
+        console.error(error);
+      }
     });
   </script>
 </body>
