@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>RSA Encrypt Clé API</title>
+</head>
+<body>
+  <script>
+    async function encryptApiKey() {
+      const apiKey = "1a2b3c4d5e6f7g8h";
+
+      // ✅ Clé publique complète encadrée
+      const publicKeyPem = `-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAietPTdEyyoV/wvxRjS5p
+Sn3ZBQH9hnVtQC9SFLgM9IkomEX9Vu9fBg2MzWSSqkQlaYIGFGH3d69Q5NOWkRo+
+Y8p5a61sc9hZ+ItAiEL9KIbZzhnMwi12jUYCTff0bVTsTGSNUePQ2V42sToOIKCe
+BpUtwWKhhW3CSpK7S1iJhS9H22/BT/pk21Jd8btwMLUHfVD95iXbHNM8u6vFaYuH
+czx966T7gpa9RGGXRtiOr3ScJq1515tzOSOsHTPHLTun59nxxJiEjKoI4Lb9h6Il
+auvcGAQHp5q6/2XmxuqZdGzh39uLac8tMSmY3vC3fiHYC3iMyTb7eXqATIhDUOf9
+mOSbgZMS19iiVZvz8igDl950IMcelJwcj0qCLoufLE5y8ud5WIw47OCVkD7tcAEP
+mVWlCQ744SIM5afw+Jg50T1SEtu3q3GiL0UQ6KTLDyDEt5BL9HWXAIXsjFdPDpX1
+jtxZavVQV+Jd7FXhuPQuDbh12liTROREdzatYWRnrhzeOJ5Se9xeXLvYSj8DmAI4
+iFf2cVtWCzj/02uK4+iIGXlX7lHP1W+tycLS7Pe2RdtC2+oz5RSSqb5jI4+3iEY/
+vZjSMBVk69pCDzZy4ZE8LBgyEvSabJ/cddwWmShcRS+21XvGQ1uXYLv0FCTEHHob
+Cfmn2y8bJBb/Hct53BaojWUCAwEAAQ==
+-----END PUBLIC KEY-----`;
+
+      // Importer la clé publique RSA
+      async function importRsaKey(pem) {
+        const pemHeader = "-----BEGIN PUBLIC KEY-----";
+        const pemFooter = "-----END PUBLIC KEY-----";
+        const pemContents = pem.replace(pemHeader, "").replace(pemFooter, "").replace(/\s/g, '');
+        const binaryDer = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
+
+        return await window.crypto.subtle.importKey(
+          "spki",
+          binaryDer.buffer,
+          {
+            name: "RSA-OAEP",
+            hash: "SHA-256"
+          },
+          true,
+          ["encrypt"]
+        );
+      }
+
+      const cryptoKey = await importRsaKey(publicKeyPem);
+
+      // Chiffrement
+      const encryptedBuffer = await window.crypto.subtle.encrypt(
+        { name: "RSA-OAEP" },
+        cryptoKey,
+        new TextEncoder().encode(apiKey)
+      );
+
+      // Conversion vers Base64
+      function arrayBufferToBase64(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        bytes.forEach(b => binary += String.fromCharCode(b));
+        return btoa(binary);
+      }
+
+      const encryptedBase64 = arrayBufferToBase64(encryptedBuffer);
+      console.log("Clé API cryptée (Base64) :", encryptedBase64);
+    }
+
+    encryptApiKey();
+  </script>
+</body>
+</html>

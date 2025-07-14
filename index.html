@@ -65,7 +65,7 @@
         <i data-lucide="ticket" class="w-12 h-12 text-red-600 mb-4"></i>
         <h3 class="text-2xl font-semibold mb-2">Place Standard</h3>
         <p class="text-3xl font-bold text-red-600 mb-4">5 000 FC</p>
-        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="standard">
+        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="0">
           Acheter un billet
         </button>
       </div>
@@ -74,7 +74,7 @@
         <i data-lucide="ticket" class="w-12 h-12 text-red-600 mb-4"></i>
         <h3 class="text-2xl font-semibold mb-2">Place VIP</h3>
         <p class="text-3xl font-bold text-red-600 mb-4">10$</p>
-        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="vip">
+        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="1">
           Acheter un billet
         </button>
       </div>
@@ -209,13 +209,6 @@
       }
     });
 
-    // Fonction pour générer un code unique basé sur les secondes depuis 1978
-    function generateUniqueCodeFrom1978() {
-      const now = Math.floor(Date.now() / 1000); // secondes depuis 1970
-      const start1978 = Math.floor(new Date('1978-01-01T00:00:00Z').getTime() / 1000);
-      const secondsSince1978 = now - start1978;
-      return 'TK-' + secondsSince1978;
-    }
 
     document.getElementById('paymentForm').addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -245,9 +238,9 @@
         console.log(result);
 
         // Si l'API ne renvoie pas de code unique, on en génère un côté client
-        const uniqueCode = result["code"] || generateUniqueCodeFrom1978();
+        const uniqueCode = result["code"] ;
 
-      
+    
         const canvas = document.getElementById('qrcodeCanvas');
         const link = document.getElementById('downloadLink');
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paiement CinetPay</title>
+
+  <!-- SDK CinetPay -->
+  <script src="https://cdn.cinetpay.com/seamless/main.js" type="text/javascript"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+    #cinetpay-container {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #00aaff;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paiement avec CinetPay</h1>
+
+  <!-- Conteneur requis par CinetPay -->
+  <div id="cinetpay-container"></div>
+
+  <!-- Bouton de déclenchement -->
+  <button onclick="check()">Payer maintenant</button>
+
+  <script>
+    function check() {
+      // Configuration du paiement
+      CinetPay.setConfig({
+        apikey: '10702646756867f3ce15e078.13285887', // 🔒 à sécuriser côté serveur en prod
+        site_id: 105901795,
+        notify_url: 'https://gestionticket.menjidrc.com', // ✅ à remplacer par ton endpoint réel
+        mode: "PRODUCTION", // ou "TEST"
+        container: "cinetpay-container",
+        close_after_response: true
+      });
+
+      // Lancement du checkout
+      CinetPay.getCheckout({
+        transaction_id: Date.now().toString(), // transaction unique (ex: horodatage)
+        amount: 10000,
+        currency: 'CDF',
+        channels: 'MOBILE_MONEY', // ou "MOBILE_MONEY", "CARD", etc.
+        description: 'Paiement test via CinetPay',
+      });
+
+      CinetPay.waitResponse(function(data) {
+         // En cas d'échec
+          if (data.status == "REFUSED") {
+              if (alert("Votre paiement a échoué")) {
+                  window.location.reload();
+              }
+          }
+          // En cas de succès
+          else if (data.status == "ACCEPTED") {
+              if (alert("Votre paiement a été effectué avec succès")) {
+                  // correct, on delivre le service
+                  window.location.reload();
+              }
+          }
+   });
+
+
+    }
+  </script>
+</body>
+</html>
