@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paiement Mobile Money</title>
+  <style>
+    #loader {
+      display: none;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #status {
+      text-align: center;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h2>Formulaire de paiement</h2>
+
+  <form id="form">
+    <p>
+      Entrer le montant : 
+      <input id="montant" type="text" name="montant" required>
+    </p>
+    <p>
+      Entrer le numéro : 
+      <input type="tel"  placeholder="+243xxxxxxxxx"
+      pattern="^\+243\d{9}$" id="numero" name="numero" required>
+    </p>
+
+    <p>
+      Devise : 
+      <select name="device" id="devise">
+        <option selected value="USD">USD</option>
+        <option value="CDF">CDF</option>
+      </select>
+    </p>
+
+    <p>
+      Service : 
+      <select name="service" id="service">
+        <option selected value="MPESA">MPESA</option>
+        <option value="orange">ORANGEMONEY</option>
+        <option value="AIRTEL">AIRTELMONEY</option>
+      </select>
+     
+    </p>
+    <input type="submit" value="Soumettre">
+  </form>
+
+  <div id="status">
+    <div id="loader"></div>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    let publicApiKeyTest, publicApiKeyProd, secretApiKeyTest, secretApiKeyProd;
+
+    // Partie test
+    publicApiKeyTest = "MP-SBPK-10GzZk6.6PV6$eSqSnpd8ziKYMk2O0Y9GSGGqymvN0ORwcWVi0C1y3$tP20HjiTf$99tzNEx0xO$o.eExJ$Wdusq1VWOOsK9CQXE4Uq.252F$YessDcFsfIu";
+    secretApiKeyTest = "MP-SBPK-Nk7z1$xy7KERyHJiEKGWMoAPrD7iU2t.iD3ug3u9$CBcIy/ehywbmq66jn1JmJk1b$bCKBZuNcN$2TaXmfwTVQZETLPoXrnG6028Wk0QIX$05chUa0B$SNGo";
+    // partie public
+    publicApiKeyProd="MP-LIVEPK-uBJA1kXKlyC0LcXTkTAJ7JjC2gaxeLQ.d.Ohe2u5fWh9kRKV$Gx1qrA.2EOBUjV8M$PYC/3mp$x6.8.$10psxlIwBJ7Z/12BfTI$OLDy5$KZEf/uY31O0ky0"
+    secretApiKeyProd="MP-LIVESK-.OS88jFPhdovl.nOu$k5ZyTE2jlAbV$wvj1v.7ikTyd0d0.B4$z7br5P3g$Ai1n2dCnxyVDRPYBC204Kj61zO2yyx3uvJ0$SJKl2Iw.dQPqu3BIhH$ABpoN0"
+
+
+    const form = document.querySelector("#form");
+    const loader = document.querySelector("#loader");
+    const message = document.querySelector("#message");
+    const devise = document.querySelector("#devise");
+    const service = document.querySelector("#service");
+    let deviceselect="USD";
+    let serviceselct="MPESA"
+      
+
+      devise.addEventListener("change", function () {
+            deviceselect = this.value;
+          console.log("Devise sélectionnée :", deviceselect);
+      });
+
+      service.addEventListener("change", function () {
+          serviceselct= this.value;
+          console.log("Service sélectionné :", serviceselct);
+      });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const montant = document.querySelector("#montant").value.trim();
+      const numero = document.querySelector("#numero").value.trim();
+    
+     
+
+      if (!montant || !numero) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
+
+      const transactionReference = `TX-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+
+      const data = {
+        transactionReference: transactionReference,
+        gatewayMode: "1", // Test mode
+        publicApiKey: publicApiKeyProd,
+        secretApiKey: secretApiKeyProd,
+        order: {
+          amount: montant,
+          currency: deviceselect,
+          customerFullName: "Manima",
+          customerEmailAdress: "manimamarien08@gmail.com"
+        },
+        paymentChannel: {
+          channel: "MOBILEMONEY",
+          provider: serviceselct,
+          walletID: numero,
+          callbackUrl: "https://your_domaine.com/mobile_calback"
+        }
+      };
+
+      // Affiche le loader
+      loader.style.display = "block";
+      message.textContent = "Payement encours";
+
+      fetch("https://marchand.maishapay.online/api/collect/v2/store/mobileMoney", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log("Résultat :", result);
+        message.textContent = "Paiement envoyé ! Vérifiez votre téléphone.";
+      })
+      .catch(error => {
+        console.error("Erreur :", error);
+        message.textContent = "Erreur lors de la soumission.";
+      })
+      .finally(() => {
+        loader.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>

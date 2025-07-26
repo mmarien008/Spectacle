@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Paiement CinetPay</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<script>
+ const data = {
+  "apikey": "10702646756867f3ce15e078.13285887",
+  "site_id": "105901795",
+  "transaction_id": Math.floor(Math.random() * 100000000).toString(),
+  "amount": 1000,
+  "currency": "CDF",
+  "description": "TEST INTEGRATION",
+  "customer_id": "1723",
+  "customer_name": "KOUADIO",
+  "customer_surname": "Francisse",
+  "customer_email": "harrissylver@gmail.com",
+  "customer_phone_number": "+243827429136", // RDC = +243
+  "customer_address": "Kinshasa",
+  "customer_city": "Kinshasa",
+  "customer_country": "CD",
+  "customer_state": "CD",
+  "customer_zip_code": "0000",
+  "notify_url": "https://webhook.site/d1dbbb89-52c7-49af-a689-b3c412df820d",
+  "return_url": "https://webhook.site/d1dbbb89-52c7-49af-a689-b3c412df820d",
+  "channels": "ALL",
+  "metadata": "user1",
+  "lang": "FR",
+  "invoice_data": {
+    "Donnee1": "",
+    "Donnee2": "",
+    "Donnee3": ""
+  }
+};
+
+
+  axios.post('https://api-checkout.cinetpay.com/v2/payment', data, {
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => {
+    console.log(response.data);
+    // Vérifie si payment_url est présent
+  if (response.data && response.data.data && response.data.data.payment_url) {
+    // Redirection vers la page de paiement
+    window.location.href = response.data.data.payment_url;
+  } else {
+    alert("Erreur : URL de paiement introuvable.");
+  }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+</script>
+
+</body>
+</html>
