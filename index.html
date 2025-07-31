@@ -350,54 +350,19 @@ function hideStatusModal() {
       }
     });
 
+    
+
 
     document.getElementById('paymentForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-
-      let publicApiKeyTest, publicApiKeyProd, secretApiKeyTest, secretApiKeyProd;
-
-      // Partie test
-      publicApiKeyTest = "MP-SBPK-10GzZk6.6PV6$eSqSnpd8ziKYMk2O0Y9GSGGqymvN0ORwcWVi0C1y3$tP20HjiTf$99tzNEx0xO$o.eExJ$Wdusq1VWOOsK9CQXE4Uq.252F$YessDcFsfIu";
-      secretApiKeyTest = "MP-SBPK-Nk7z1$xy7KERyHJiEKGWMoAPrD7iU2t.iD3ug3u9$CBcIy/ehywbmq66jn1JmJk1b$bCKBZuNcN$2TaXmfwTVQZETLPoXrnG6028Wk0QIX$05chUa0B$SNGo";
-      // partie public
-      publicApiKeyProd="MP-LIVEPK-uBJA1kXKlyC0LcXTkTAJ7JjC2gaxeLQ.d.Ohe2u5fWh9kRKV$Gx1qrA.2EOBUjV8M$PYC/3mp$x6.8.$10psxlIwBJ7Z/12BfTI$OLDy5$KZEf/uY31O0ky0"
-      secretApiKeyProd="MP-LIVESK-.OS88jFPhdovl.nOu$k5ZyTE2jlAbV$wvj1v.7ikTyd0d0.B4$z7br5P3g$Ai1n2dCnxyVDRPYBC204Kj61zO2yyx3uvJ0$SJKl2Iw.dQPqu3BIhH$ABpoN0"
-
-      const transactionReference = `TX-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
-
-      montant = 
-      ticketType.value === "vip" && deviceselect === "usd" ? 29000 * parseInt(quantity.value) :
-      ticketType.value === "standard" && deviceselect === "usd" ? 2 * parseInt(quantity.value) :
-      ticketType.value === "standard" && deviceselect === "cdf" ? 5000 * parseInt(quantity.value) :
-      ticketType.value === "vip" && deviceselect === "usd" ? 10 * parseInt(quantity.value) :
-      0; 
-
-      const dataMobile = {
-        transactionReference: transactionReference,
-        gatewayMode: "0", 
-        publicApiKey: publicApiKeyTest,
-        secretApiKey: secretApiKeyTest,
-        order: {
-          amount: montant,
-          currency: deviceselect,
-          customerFullName: "client",
-          customerEmailAdress: "manimamarien08@gmail.com"
-        },
-        paymentChannel: {
-          channel: "MOBILEMONEY",
-          provider: serviceselct,
-          walletID: this.numero_client.value,
-          callbackUrl: "https://your_domaine.com/mobile_calback"
-        }
-      };
 
       const data = {
         nom_complet_client: this.nom_complet_client.value,
         numero_client: this.numero_client.value,
         nombre_reel: this.nombre_reel.value,
         type_billet: this.type_billet.value,
-        devise: this.devise.value
-
+        devise: this.devise.value,
+        service: "MPESA"
       };
 
        // Affiche le loader
@@ -407,12 +372,12 @@ function hideStatusModal() {
       try {
         // Envoi des données à l'API
 
-        fetch("https://marchand.maishapay.online/api/collect/v2/store/mobileMoney", {
+        fetch("http://127.0.0.1:8000/api/mobileMoney/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(dataMobile)
+        body: JSON.stringify(data)
         })
         .then(response => response.json())
         .then(async result => {
@@ -423,28 +388,15 @@ function hideStatusModal() {
 
             alert("Paiement Effectue avec succes,telecharger le billet  ")
 
-            console.log("Résultat :", result);
+            
             message.textContent = "Paiement envoyé ! Vérifiez votre téléphone.";
 
-            //CODE
-            const response = await fetch('https://gestionticket.menjidrc.com/api/billets', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-            });
+            
 
-            if (!response.ok) {
-              throw new Error('Erreur serveur : ' + response.status);
-            }
-
-            const resul = await response.json();
-
-            console.log(resul);
+            console.log(result);
 
             // Si l'API ne renvoie pas de code unique, on en génère un côté client
-            const uniqueCode = resul["data"]["code_bilet"] ;
+            const uniqueCode = result["billet"]["code_bilet"] ;
 
             const canvas = document.getElementById('qrcodeCanvas');
             const link = document.getElementById('downloadLink');
@@ -469,7 +421,7 @@ function hideStatusModal() {
             modal.classList.remove('flex');
             this.reset();
 
-            nomclient= resul["data"]["nom_complet_client"]
+            nomclient= result["billet"]["nom_complet_client"]
           }else{
             hideStatusModal();
             alert("Erreur de payement,verifiez le solde de votre compte ou votre numero de telephone")
