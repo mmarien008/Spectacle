@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spectacle</title>
+  <title>Spectacle ALORS BOB</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
    
   .modal {
@@ -65,19 +67,12 @@
     <div class="absolute inset-0 bg-black opacity-60"></div>
     <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
       <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Vivez une soirée inoubliable</h1>
-      <p class="text-lg md:text-2xl text-white mb-6">Le grand spectacle de l’année arrive à Kinshasa !</p>
-      <a href="#billets" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-semibold transition">Acheter un billet</a>
+      <p class="text-lg md:text-2xl text-white mb-6"> Plongez dans une expérience unique avec l'artiste Bob Kayemba, des performances époustouflantes et une ambiance électrique ! Pour ses 5 ans de Carrière. ALORS BOB!</p>
+      <a href="#billets" class="bg-red-600 hover:bg-red-500 text-white px-6 py-3 rounded-full text-lg font-semibold transition">Acheter un billet</a>
     </div>
   </header>
 
-  <!-- Présentation -->
-  <section class="py-16 px-6 max-w-5xl mx-auto">
-    <h2 class="text-3xl font-bold text-center mb-8">À propos du spectacle</h2>
-    <p class="text-center text-lg leading-relaxed text-gray-700">
-      Plongez dans une expérience unique avec l'artiste Bob Kayemba, des performances époustouflantes et une ambiance électrique !
-      Pour ses 5 ans de Carrière. Alors bob
-    </p>
-  </section>
+ 
 
   <!-- Infos Pratiques -->
   <section class="bg-white py-12 px-6">
@@ -87,14 +82,14 @@
           <i data-lucide="map-pin" class="w-10 h-10 text-red-600"></i>
         </div>
         <h3 class="text-xl font-semibold mb-1">Lieu</h3>
-        <p>Humeuble excelencia, Kinshasa</p>
+        <p>Salle Splendeur ex 13'Or Room , <br> IMMEUBLE EXCELENCIA, <br> Saio & Kasa-vubu Ref:Upak</p>
       </div>
       <div>
         <div class="flex justify-center mb-2">
           <i data-lucide="calendar-days" class="w-10 h-10 text-red-600"></i>
         </div>
         <h3 class="text-xl font-semibold mb-1">Date</h3>
-        <p>Dimanche 31 OUTS 2025</p>
+        <p>Dimanche 31 AOUT 2025</p>
       </div>
       <div>
         <div class="flex justify-center mb-2">
@@ -115,7 +110,7 @@
         <i data-lucide="ticket" class="w-12 h-12 text-red-600 mb-4"></i>
         <h3 class="text-2xl font-semibold mb-2">Place Standard</h3>
         <p class="text-3xl font-bold text-red-600 mb-4">5 000 FC</p>
-        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="0">
+        <button style=" font-weight: bold;"  class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="0">
           Acheter un billet
         </button>
       </div>
@@ -124,7 +119,7 @@
         <i data-lucide="ticket" class="w-12 h-12 text-red-600 mb-4"></i>
         <h3 class="text-2xl font-semibold mb-2">Place VIP</h3>
         <p class="text-3xl font-bold text-red-600 mb-4">10$</p>
-        <button class="open-modal bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full" data-ticket="1">
+        <button style="background-color: #FFDE0A; font-weight: bold;" class="open-modal  hover:bg-red-700 text-black px-6 py-3 rounded-full" data-ticket="1">
           Acheter un billet
         </button>
       </div>
@@ -147,7 +142,7 @@
       <!-- Nom complet -->
       <div >
         <label for="fullname" class="block text-sm font-medium text-gray-700">Nom complet</label>
-        <input type="text" id="fullname" name="fullname" required
+        <input type="text" id="fullname" name="nom_complet_client" required
                class="mt-1 border block w-full rounded-xl border-gray-300 shadow-sm focus:ring-red-500 focus:border-red-500 p-3" />
       </div>
 
@@ -163,22 +158,22 @@
 
 
 <!--  devise -->
-      <div >
-        <label for="fullname" class="block text-sm font-medium text-gray-700">Devise</label>
+      <div>
+        <label for="devise" class="block text-sm font-medium text-gray-700">Devise</label>
         <select id="devise" name="devise" required
-        class="mt-1 border block w-full rounded-xl border-gray-300 shadow-sm focus:ring-red-500 focus:border-red-500 p-3">
-          <option selected value="USD">USD</option>
-          <option value="CDF">CDF</option>
+                class="mt-1 border block w-full rounded-xl border-gray-300 shadow-sm focus:ring-red-500 focus:border-red-500 p-3">
+          <option value="usd">USD</option>
+          <option value="cdf">CDF</option>
         </select>
       </div>
 
       <!--  téléphone -->
       <div>
-        <label for="email" class="block text-sm font-medium text-gray-700">téléphone</label>
+        <label for="telephone" class="block text-sm font-medium text-gray-700">téléphone</label>
         <input 
           type="tel" 
-          id="email"
-          name="email"
+          id="telephone"
+          name="numero_client"
           placeholder="+243xxxxxxxxx"
           pattern="^\+243\d{9}$"
           required
@@ -188,17 +183,17 @@
       <!-- Nombre de tickets -->
       <div>
         <label for="quantity" class="block text-sm font-medium text-gray-700">Nombre de tickets</label>
-        <input type="number" id="quantity" name="quantity" min="1" value="1" required
+        <input type="number" id="quantity" name="nombre_reel" min="1" value="1" required
                class="mt-1 border block w-full rounded-xl border-gray-300 shadow-sm focus:ring-red-500 focus:border-red-500 p-3" />
       </div>
 
       <!-- Type de billet -->
       <div>
         <label for="ticketType" class="block text-sm font-medium text-gray-700">Type de billet</label>
-        <select id="ticketType" name="ticketType" required
+        <select id="ticketType" name="type_billet" required
                 class="mt-1 border block w-full rounded-xl border-gray-300 shadow-sm focus:ring-red-500 focus:border-red-500 p-3">
-          <option value="0">Standard – 5 000 FC (2$)</option>
-          <option value="1">VIP – 10 $ (28000fc)</option>
+          <option value="standard">Standard – 5 000 FC(2$)</option>
+          <option value="vip">VIP – 10 $(29000 FC)</option>
         </select>
       </div>
 
@@ -220,15 +215,13 @@
     </button>
     <h2 class="text-xl font-bold mb-4">Votre billet est prêt</h2>
     <canvas id="qrcodeCanvas" class="mx-auto"></canvas>
-    <a id="downloadLink" href="#" download="ticket-qr.png" class="text-blue-600 underline mt-4 block">Télécharger le QR Code</a>
-  </div>
+    <button onclick="telecharger()" class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Télécharger en PDF
+    </button>
+   
 </div>
 
-  <!-- QRCode Affichage + Lien -->
-  <div id="qrcodeContainer" class="hidden flex-col items-center mt-8 mb-10 text-center">
-    <canvas id="qrcodeCanvas"></canvas>
-    <a id="downloadLink" href="#" download="ticket-qr.png" class="text-blue-600 underline mt-2">Télécharger le QR Code</a>
-  </div>
+
 
   <!-- Footer -->
   <footer class="bg-gray-900 text-white py-8 mt-12">
@@ -245,6 +238,40 @@
   <!-- JS Scripts -->
   <script>
 
+function telecharger() {
+  const canvas = document.getElementById('qrcodeCanvas');
+
+  if (!canvas) {
+    alert("QR Code non généré !");
+    return;
+  }
+
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const qrWidth = 100;
+  const x = (pageWidth - qrWidth) / 2;
+  const y = 40;
+
+  pdf.setFillColor(230, 240, 255);
+  pdf.roundedRect(x - 10, y - 10, qrWidth + 20, qrWidth + 20, 8, 8, 'F');
+
+  pdf.setFontSize(18);
+  pdf.setTextColor(50, 50, 120);
+  pdf.text("Bienvenue au spectacle de Bob", pageWidth / 2, 25, { align: "center" });
+
+  pdf.addImage(imgData, "PNG", x, y, qrWidth, qrWidth);
+
+  pdf.setFontSize(12);
+  pdf.setTextColor(80, 80, 80);
+  pdf.text("ALORS BOB !", pageWidth / 2, y + qrWidth + 25, { align: "center" });
+
+  pdf.save("billet-bob.pdf");
+}
+
+
 function showStatusModal(message = "Traitement en cours...") {
   const modal = document.getElementById("statusModal");
   const msg = document.getElementById("message");
@@ -256,8 +283,6 @@ function hideStatusModal() {
   const modal = document.getElementById("statusModal");
   modal.classList.remove("show");
 }
-
-
 
     lucide.createIcons();
 
@@ -273,11 +298,10 @@ function hideStatusModal() {
 
     const devise = document.querySelector("#devise");
     const service = document.querySelector("#service");
-    let deviceselect="USD";
+    let deviceselect="usd";
     let serviceselct="MPESA"
 
-
-
+    
     devise.addEventListener("change", function () {
             deviceselect = this.value;
           console.log("Devise sélectionnée :", deviceselect);
@@ -295,7 +319,7 @@ function hideStatusModal() {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         const ticket = btn.getAttribute('data-ticket');
-        ticketTypeSelect.value = ticket;
+        ticketTypeSelect.value = ticket === "0" ? "standard" : "vip";
       });
     });
 
@@ -329,7 +353,7 @@ function hideStatusModal() {
 
       let publicApiKeyTest, publicApiKeyProd, secretApiKeyTest, secretApiKeyProd;
 
-// Partie test
+      // Partie test
       publicApiKeyTest = "MP-SBPK-10GzZk6.6PV6$eSqSnpd8ziKYMk2O0Y9GSGGqymvN0ORwcWVi0C1y3$tP20HjiTf$99tzNEx0xO$o.eExJ$Wdusq1VWOOsK9CQXE4Uq.252F$YessDcFsfIu";
       secretApiKeyTest = "MP-SBPK-Nk7z1$xy7KERyHJiEKGWMoAPrD7iU2t.iD3ug3u9$CBcIy/ehywbmq66jn1JmJk1b$bCKBZuNcN$2TaXmfwTVQZETLPoXrnG6028Wk0QIX$05chUa0B$SNGo";
       // partie public
@@ -339,36 +363,38 @@ function hideStatusModal() {
       const transactionReference = `TX-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
       montant = 
-      ticketType.value === "1" && deviceselect === "CDF" ? 28000 * parseInt(quantity.value) :
-      ticketType.value === "0" && deviceselect === "USD" ? 2 * parseInt(quantity.value) :
-      ticketType.value === "0" && deviceselect === "CDF" ? 5000 * parseInt(quantity.value) :
-      ticketType.value === "1" && deviceselect === "USD" ? 10 * parseInt(quantity.value) :
+      ticketType.value === "vip" && deviceselect === "usd" ? 29000 * parseInt(quantity.value) :
+      ticketType.value === "standard" && deviceselect === "usd" ? 2 * parseInt(quantity.value) :
+      ticketType.value === "standard" && deviceselect === "cdf" ? 5000 * parseInt(quantity.value) :
+      ticketType.value === "vip" && deviceselect === "usd" ? 10 * parseInt(quantity.value) :
       0; 
 
       const dataMobile = {
         transactionReference: transactionReference,
-        gatewayMode: "1", 
-        publicApiKey: publicApiKeyProd,
-        secretApiKey: secretApiKeyProd,
+        gatewayMode: "0", 
+        publicApiKey: publicApiKeyTest,
+        secretApiKey: secretApiKeyTest,
         order: {
           amount: montant,
           currency: deviceselect,
-          customerFullName: "Manima",
+          customerFullName: "client",
           customerEmailAdress: "manimamarien08@gmail.com"
         },
         paymentChannel: {
           channel: "MOBILEMONEY",
           provider: serviceselct,
-          walletID: email.value,
+          walletID: this.numero_client.value,
           callbackUrl: "https://your_domaine.com/mobile_calback"
         }
       };
 
       const data = {
-        nom: this.fullname.value,
-        conctat: this.email.value,
-        n_billet: this.quantity.value,
-        vip: this.ticketType.value
+        nom_complet_client: this.nom_complet_client.value,
+        numero_client: this.numero_client.value,
+        nombre_reel: this.nombre_reel.value,
+        type_billet: this.type_billet.value,
+        devise: this.devise.value
+
       };
 
        // Affiche le loader
@@ -388,7 +414,7 @@ function hideStatusModal() {
         .then(response => response.json())
         .then(async result => {
 
-          if (result.status_code=="200") {
+          if (true) {
 
             hideStatusModal();
             alert("Paiement Effectue avec succes ")
@@ -397,7 +423,7 @@ function hideStatusModal() {
             message.textContent = "Paiement envoyé ! Vérifiez votre téléphone.";
 
             //CODE
-            const response = await fetch('https://gestionticket.menjidrc.com/api/tickets', {
+            const response = await fetch('https://gestionticket.menjidrc.com/api/billets', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -414,7 +440,7 @@ function hideStatusModal() {
             console.log(resul);
 
             // Si l'API ne renvoie pas de code unique, on en génère un côté client
-            const uniqueCode = resul["code"] ;
+            const uniqueCode = resul["data"]["code_bilet"] ;
 
             const canvas = document.getElementById('qrcodeCanvas');
             const link = document.getElementById('downloadLink');
@@ -427,6 +453,7 @@ function hideStatusModal() {
                 light: "#ffffff"
               }
             }, function (error) {
+
               if (error) return console.error(error);
               const dataURL = canvas.toDataURL("image/png");
               link.href = dataURL;
