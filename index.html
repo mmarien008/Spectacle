@@ -219,9 +219,10 @@
       Télécharger en PDF
     </button>
    
+  </div>
 </div>
 
-
+ 
 
   <!-- Footer -->
   <footer class="bg-gray-900 text-white py-8 mt-12">
@@ -237,6 +238,9 @@
 
   <!-- JS Scripts -->
   <script>
+
+let nomclient="";
+ 
 
 function telecharger() {
   const canvas = document.getElementById('qrcodeCanvas');
@@ -260,7 +264,7 @@ function telecharger() {
 
   pdf.setFontSize(18);
   pdf.setTextColor(50, 50, 120);
-  pdf.text("Bienvenue au spectacle de Bob", pageWidth / 2, 25, { align: "center" });
+  pdf.text("Bienvenue au spectacle de Bob ,  "+nomclient, pageWidth / 2, 25, { align: "center" });
 
   pdf.addImage(imgData, "PNG", x, y, qrWidth, qrWidth);
 
@@ -268,9 +272,8 @@ function telecharger() {
   pdf.setTextColor(80, 80, 80);
   pdf.text("ALORS BOB !", pageWidth / 2, y + qrWidth + 25, { align: "center" });
 
-  pdf.save("billet-bob.pdf");
+  pdf.save("billet- de "+nomclient+".pdf");
 }
-
 
 function showStatusModal(message = "Traitement en cours...") {
   const modal = document.getElementById("statusModal");
@@ -417,7 +420,8 @@ function hideStatusModal() {
           if (true) {
 
             hideStatusModal();
-            alert("Paiement Effectue avec succes ")
+
+            alert("Paiement Effectue avec succes,telecharger le billet  ")
 
             console.log("Résultat :", result);
             message.textContent = "Paiement envoyé ! Vérifiez votre téléphone.";
@@ -455,19 +459,17 @@ function hideStatusModal() {
             }, function (error) {
 
               if (error) return console.error(error);
-              const dataURL = canvas.toDataURL("image/png");
-              link.href = dataURL;
-
+         
               // Afficher la modal QR
               qrModal.classList.remove("hidden");
               qrModal.classList.add("flex");
             });
 
-            alert(` Paiement effectué pour !`);
-
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             this.reset();
+
+            nomclient= resul["data"]["nom_complet_client"]
           }else{
             hideStatusModal();
             alert("Erreur de payement,verifiez le solde de votre compte ou votre numero de telephone")
